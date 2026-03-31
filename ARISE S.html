@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>60-Day Triple Subject Tracker | Bio + Physics + Chemistry (KPK Board)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #eef2f7 0%, #d9e2ec 100%);
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 1.5rem;
+            color: #1a2c3e;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .tracker-card {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #0f2b3d;
+            color: white;
+            padding: 1.6rem 2rem;
+            border-bottom: 4px solid #f4b942;
+        }
+
+        .header h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .header h1 small {
+            font-size: 0.85rem;
+            font-weight: 400;
+            background: #2c5a6e;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+        }
+
+        .progress-stats {
+            display: flex;
+            gap: 1.2rem;
+            margin-top: 0.9rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-badge {
+            background: #1f4a5e;
+            border-radius: 60px;
+            padding: 0.3rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .day-navigation {
+            background: #f8fafd;
+            padding: 0.8rem 2rem;
+            border-bottom: 1px solid #e2edf2;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 0.7rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: white;
+            border: 1px solid #cbdde6;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            color: #1f4a5e;
+        }
+
+        .nav-btn:hover {
+            background: #e5f0f5;
+            border-color: #8bb3c2;
+            transform: translateY(-1px);
+        }
+
+        .danger-btn {
+            background: #fff2f0;
+            border-color: #e0b4ad;
+            color: #b13e2d;
+        }
+
+        .danger-btn:hover {
+            background: #ffe0db;
+        }
+
+        .day-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: white;
+            padding: 0.2rem 0.9rem;
+            border-radius: 60px;
+            border: 1px solid #cbdde6;
+        }
+
+        .day-selector label {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        #jumpToDay {
+            width: 70px;
+            padding: 0.4rem;
+            border-radius: 40px;
+            border: 1px solid #bfd4de;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .content-area {
+            padding: 2rem;
+        }
+
+        .topics-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .topic-card {
+            flex: 1;
+            min-width: 240px;
+            background: #fefefe;
+            border-radius: 1.2rem;
+            border-left: 6px solid;
+            padding: 1rem 1.4rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+
+        .topic-card.bio {
+            border-left-color: #2a9d8f;
+            background: #f6fefc;
+        }
+        .topic-card.physics {
+            border-left-color: #e9c46a;
+            background: #fffcf0;
+        }
+        .topic-card.chemistry {
+            border-left-color: #e76f51;
+            background: #fff8f2;
+        }
+
+        .topic-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .topic-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin: 0.5rem 0;
+            color: #2d4f5e;
+        }
+
+        .topic-meta {
+            font-size: 0.8rem;
+            color: #6b8c9c;
+            margin-top: 0.3rem;
+        }
+
+        .study-form {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin: 1rem 0 1rem;
+        }
+
+        .subject-section {
+            background: #f9fbfd;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            border: 1px solid #e2edf2;
+        }
+
+        .subject-section h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border-bottom: 2px solid #e0eef5;
+            padding-bottom: 0.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #1f5e6e;
+        }
+
+        textarea {
+            border: 1.5px solid #cfe1e8;
+            border-radius: 1rem;
+            padding: 0.9rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            resize: vertical;
+            background: white;
+            transition: 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #f4b942;
+            box-shadow: 0 0 0 3px rgba(244, 185, 66, 0.2);
+        }
+
+        .save-btn {
+            background: #1e6f5c;
+            border: none;
+            padding: 0.85rem;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 0.5rem;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .save-btn:hover {
+            background: #0f5546;
+            transform: scale(0.98);
+        }
+
+        .protocol-reminder {
+            background: #fef8e7;
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            margin-top: 2rem;
+            border-left: 5px solid #f4b942;
+            font-size: 0.85rem;
+        }
+
+        /* Motivation section styles */
+        .motivation-section {
+            background: #faf5e9;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin: 2rem 0 1rem;
+            border: 1px solid #f0e2c5;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+        .motivation-section h2 {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1.5rem;
+            color: #b45f2b;
+            margin-bottom: 1rem;
+            border-left: 4px solid #e9c46a;
+            padding-left: 1rem;
+        }
+        .motivation-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: space-between;
+        }
+        .quote-card {
+            flex: 1;
+            min-width: 180px;
+            background: white;
+            border-radius: 1.2rem;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .quote-card:hover {
+            transform: translateY(-3px);
+        }
+        .quote-card .quote {
+            font-style: italic;
+            font-size: 0.9rem;
+            color: #2c3e2f;
+            margin-bottom: 0.5rem;
+        }
+        .quote-card .author {
+            font-weight: bold;
+            color: #b45f2b;
+            text-align: right;
+            font-size: 0.85rem;
+        }
+        .father-work {
+            background: #e9e3d4;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 500;
+            color: #3e2a1f;
+        }
+        .footer-note {
+            background: #e2edf2;
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.8rem;
+            color: #2d5f6e;
+        }
+        .about-text {
+            background: #eef2f7;
+            padding: 0.8rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            color: #2c5a6e;
+        }
+        @media (max-width: 900px) {
+            body {
+                padding: 0.8rem;
+            }
+            .content-area {
+                padding: 1.2rem;
+            }
+            .topics-grid {
+                flex-direction: column;
+            }
+            .motivation-grid {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="tracker-card">
+        <div class="header">
+            <h1>📘⚡🧪 60-Day Triple Subject Mastery <small>Biology + Physics + Chemistry (KPK Board)</small></h1>
+            <div class="progress-stats">
+                <div class="stat-badge">🧬 Bio logged: <span id="bioCompletedCount">0</span>/60</div>
+                <div class="stat-badge">⚛️ Physics logged: <span id="phyCompletedCount">0</span>/60</div>
+                <div class="stat-badge">🧪 Chemistry logged: <span id="chemCompletedCount">0</span>/60</div>
+                <div class="stat-badge">📆 Current day: <span id="currentDayDisplay">1</span></div>
+            </div>
+        </div>
+
+        <div class="day-navigation">
+            <div class="nav-buttons">
+                <button class="nav-btn" id="prevDayBtn">◀ Previous Day</button>
+                <button class="nav-btn" id="nextDayBtn">Next Day ▶</button>
+                <button class="nav-btn danger-btn" id="resetAllBtn">🗑️ Reset All Progress</button>
+            </div>
+            <div class="day-selector">
+                <label>🔢 Jump to day</label>
+                <input type="number" id="jumpToDay" min="1" max="60" value="1">
+                <button class="nav-btn" id="goToDayBtn" style="padding:0.4rem 0.9rem;">Go</button>
+            </div>
+        </div>
+
+        <div class="content-area" id="mainContent">
+            <!-- About this tracker -->
+            <div class="about-text">
+                📌 <strong>About this tracker</strong> — This tool guides you through your 60‑day Biology, Physics, and Chemistry syllabus (KPK Board). Each day shows the prescribed topics. Write your <strong>plan</strong> and <strong>observations</strong> for each subject, then click <strong>Save</strong>. Your entries are stored in your browser so you can track progress, stay consistent, and finish every page. The motivation section below helps you stay inspired like the greatest leaders.
+            </div>
+
+            <!-- dynamic daily topics grid -->
+            <div class="topics-grid" id="topicsGrid"></div>
+
+            <div class="study-form">
+                <!-- Biology Section -->
+                <div class="subject-section" id="bioSection">
+                    <h3>🧬 Biology – Deep Study Log</h3>
+                    <div class="form-group">
+                        <label>📌 My plan (today's focus):</label>
+                        <textarea id="bioPlanInput" rows="2" placeholder="e.g., Draw nephron, list hormones, note disorders..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>🔍 Observations & daily log:</label>
+                        <textarea id="bioObsInput" rows="3" placeholder="Insights, memorized enzymes, diagrams practiced..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Physics Section -->
+                <div class="subject-section" id="physicsSection">
+                    <h3>⚛️ Physics – Deep Study Log</h3>
+                    <div class="form-group">
+                        <label>📌 My plan (today's focus):</label>
+                        <textarea id="phyPlanInput" rows="2" placeholder="e.g., Derive formula, solve numericals, understand MRI..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>🔍 Observations & daily log:</label>
+                        <textarea id="phyObsInput" rows="3" placeholder="Key equations, instruments, medical impact..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Chemistry Section -->
+                <div class="subject-section" id="chemistrySection">
+                    <h3>🧪 Chemistry – Deep Study Log</h3>
+                    <div class="form-group">
+                        <label>📌 My plan (today's focus):</label>
+                        <textarea id="chemPlanInput" rows="2" placeholder="e.g., Reaction mechanisms, industrial processes, periodic trends..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>🔍 Observations & daily log:</label>
+                        <textarea id="chemObsInput" rows="3" placeholder="Name reactions, key compounds, mechanisms, industrial relevance..."></textarea>
+                    </div>
+                </div>
+
+                <button class="save-btn" id="saveEntryBtn">💾 Save today's entries (all subjects)</button>
+            </div>
+
+            <!-- MOTIVATION SECTION (Kings & Father's Work) -->
+            <div class="motivation-section">
+                <h2>⚡ Fuel for the Journey ⚡</h2>
+                <div class="motivation-grid">
+                    <div class="quote-card">
+                        <div class="quote">“There is nothing impossible to him who will try.”</div>
+                        <div class="author">— Alexander the Great</div>
+                    </div>
+                    <div class="quote-card">
+                        <div class="quote">“Victory belongs to the most persevering.”</div>
+                        <div class="author">— Napoleon Bonaparte</div>
+                    </div>
+                    <div class="quote-card">
+                        <div class="quote">“I came, I saw, I conquered.”</div>
+                        <div class="author">— Julius Caesar</div>
+                    </div>
+                    <div class="quote-card">
+                        <div class="quote">“It does not matter how slowly you go as long as you do not stop.”</div>
+                        <div class="author">— Confucius</div>
+                    </div>
+                </div>
+                <div class="father-work">
+                    🛠️ <strong>On Father’s Work</strong> — The quiet sacrifice, the early mornings, the unwavering commitment to provide and protect. Every lesson you master today honors that legacy. “A father’s work is never measured in hours, but in the futures he builds.” Let his strength be your anchor. Stay disciplined, stay grateful, and make each page count.
+                </div>
+                <div style="margin-top: 0.8rem; font-size: 0.8rem; text-align: center; color: #7f6b3e;">
+                    “The expert in anything was once a beginner.” – Every king started with a single step.
+                </div>
+            </div>
+
+            <div class="protocol-reminder">
+                🧠 <strong>Deep Study Protocols</strong><br>
+                🌿 <strong>Biology:</strong> System → functional cell → enzymes/hormones → disorders.<br>
+                ⚛️ <strong>Physics:</strong> Law/process → formula & units → instrument/application → human/biological impact.<br>
+                🧪 <strong>Chemistry:</strong> Periodic trend/mechanism → industrial process → biochemical connection → reaction conditions.
+            </div>
+        </div>
+        <div class="footer-note">
+            ✅ All entries saved in your browser. Track all three subjects daily — conquer your 60-day plan with the spirit of legends!
+        </div>
+    </div>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // 1. BIOLOGY DATA (60 days)
+    // --------------------------------------------------------------
+    const bioTopics = [];
+    const bioPhases = [
+        { name: "Respiration & Gas Exchange", topics: [
+            "Structure of the Human Respiratory System (Nose to Alveoli)",
+            "Mechanism of Breathing (Inhalation vs. Exhalation) and Lung Volumes",
+            "Transport of Oxygen and CO₂ and the enzyme Carbonic Anhydrase",
+            "Respiratory Disorders: Sinusitis, Otitis Media, and Pneumonia",
+            "Critical Disorders: Tuberculosis, Emphysema, and Lung Cancer"
+        ]},
+        { name: "Homeostasis & Urinary System", topics: [
+            "Concepts of Homeostasis (Osmoregulation, Thermoregulation, and Excretion)",
+            "Osmoregulation in Plants and Animals (Freshwater vs. Marine fish)",
+            "The Human Urinary System (Structure of the Kidney and the Nephron cell)",
+            "Kidney Function (Filtration/Reabsorption) and the hormone ADH",
+            "Urinary Disorders: Kidney Stones, Lithotripsy, and Kidney Failure"
+        ]},
+        { name: "Support, Movement & Muscles", topics: [
+            "The Human Skeleton (Axial vs. Appendicular) and Bone Cells (Osteocytes)",
+            "Types of Joints (Fibrous, Cartilaginous, and Synovial)",
+            "Skeletal Deformities: Disc Slip, Spondylosis, and Sciatica",
+            "Muscle Tissues (Skeletal, Cardiac, and Smooth) and Muscle Fiber structure",
+            "Muscle Contraction (Sliding Filament Model) and Muscle Fatigue"
+        ]},
+        { name: "Nervous & Chemical Coordination", topics: [
+            "The Neuron (Structure and Types) and the Nerve Impulse",
+            "The Human Brain (Forebrain, Midbrain, Hindbrain) and Spinal Cord",
+            "Nervous Disorders: Stroke, Alzheimer’s, and Meningitis",
+            "The Endocrine System (Hormones: Thyroxin, Insulin, and Glucagon)",
+            "Plant Hormones (Auxins, Cytokinins) and Tropisms (Phototropism)"
+        ]},
+        { name: "Reproduction & Development", topics: [
+            "Plant Reproduction (Alternation of generations and seed structure)",
+            "Human Reproductive Systems (Male and Female anatomy)",
+            "The Menstrual Cycle (Hormones: FSH, LH, Estrogen, Progesterone)",
+            "Embryonic Development (Zygote, Cleavage, Gastrulation)",
+            "Reproductive Disorders (STDs) and the Biology of Aging"
+        ]},
+        { name: "Growth & Development", topics: [
+            "Growth in Plants (Primary vs. Secondary growth) and Apical Meristems",
+            "Growth in Animals (Regeneration and abnormal growth/Tumors)",
+            "Role of Nucleus and Cytoplasm in development",
+            "Phases of Growth: Lag phase, Log phase, and Decelerating phase",
+            "External and Internal factors affecting growth"
+        ]},
+        { name: "Genetics & Inheritance", topics: [
+            "Mendel’s Laws (Law of Segregation and Independent Assortment)",
+            "Dominance Relations (Incomplete and Co-dominance)",
+            "Multiple Alleles (ABO Blood Groups and Rh factor)",
+            "Gene Linkage and Crossing Over",
+            "Sex Determination (XY, ZW, and XO systems)",
+            "Genetic Disorders: Hemophilia, Color Blindness, and Thalassemia"
+        ]},
+        { name: "Chromosomes & DNA", topics: [
+            "DNA Structure (Watson-Crick model and Nucleotides)",
+            "DNA Replication (Enzymes: Helicase, DNA Polymerase)",
+            "Protein Synthesis: Transcription (DNA to RNA)",
+            "Protein Synthesis: Translation (RNA to Protein)",
+            "Mutations: Point mutations and Chromosomal aberrations",
+            "Gene Expression and Regulation"
+        ]},
+        { name: "Ecology & Ecosystems", topics: [
+            "Components of the Ecosystem (Biotic and Abiotic factors)",
+            "Energy Flow: Food Chains, Food Webs, and Ecological Pyramids",
+            "Biogeochemical Cycles: The Nitrogen Cycle and Carbon Cycle",
+            "Ecological Succession (Xerosere and Hydrosere)",
+            "Human Impact: Nuclear radiation, Fertilizers, and Pesticides",
+            "Conservation of Biodiversity and Endangered Species"
+        ]},
+        { name: "Some Major Ecosystems", topics: [
+            "Terrestrial Ecosystems: Tropical Rain Forests and Temperate Forests",
+            "Grasslands and Deserts (Adaptations of xerophytes)",
+            "Tundra and Alpine Ecosystems (Permafrost)",
+            "Aquatic Ecosystems: Marine (Oceans) and Freshwater (Lakes/Rivers)",
+            "Specific Ecosystems of Pakistan mentioned in the text"
+        ]},
+        { name: "Evolution & Variation", topics: [
+            "Theories of Evolution: Lamarckism vs. Darwinism (Natural Selection)",
+            "Evidence for Evolution: Fossils, Anatomy, and Vestigial organs",
+            "Modern Synthesis (Neo-Darwinism) and Speciation",
+            "Hardy-Weinberg Law and Genetic Equilibrium"
+        ]},
+        { name: "Biotechnology & Human Welfare", topics: [
+            "Recombinant DNA Technology (Enzymes: Restriction Endonucleases and Ligase)",
+            "Applications: Production of Insulin, Interferons, and GMOs",
+            "Final Review of all 14 Units and the Disorder Ledger"
+        ]}
+    ];
+    let dayCounter = 1;
+    for (let phase of bioPhases) {
+        for (let topic of phase.topics) {
+            bioTopics.push({ day: dayCounter, phase: phase.name, title: topic });
+            dayCounter++;
+        }
+    }
+    while(bioTopics.length < 60) bioTopics.push({ day: bioTopics.length+1, phase: "Review", title: "Self-assessment / Revision" });
+
+    // --------------------------------------------------------------
+    // 2. PHYSICS DATA (60 days)
+    // --------------------------------------------------------------
+    const physicsTopics = [];
+    const physicsPhases = [
+        { name: "Electrostatics & Current", topics: [
+            "Coulomb’s Law and Electric Field lines", "Electric Potential and Potential Gradient",
+            "Capacitors and Capacitance (Parallel plate and Energy storage)", "Types of Capacitors and applications in electronics",
+            "Ohm’s Law, Resistance, and Resistivity", "Color coding for Carbon Resistors and Electrical Power",
+            "Electromotive Force (EMF) and Terminal Potential Difference", "Kirchhoff’s First and Second Laws",
+            "Wheatstone Bridge and Potentiometer", "System Study: The Human Heart's electrical system (ECG) and the Brain (EEG)"
+        ]},
+        { name: "Magnetism & Induction", topics: [
+            "Magnetic Field of Current and Force on a moving charge", "Torque on a Current Carrying Coil (Galvanometer basics)",
+            "Ampere’s Law and Field inside a Solenoid", "System Study: Magnetic Resonance Imaging (MRI) and how it uses magnetic fields",
+            "Electromagnetic Induction and Induced EMF", "Faraday’s Law and Lenz’s Law", "Mutual and Self Induction",
+            "Alternating Current (AC) Generators", "DC Motors and Back Emf", "Transformers and Power Transmission"
+        ]},
+        { name: "Alternating Current & Solids", topics: [
+            "AC Circuits (RMS values and Phase)", "AC through Resistance and Capacitance", "AC through Inductance",
+            "Series and Parallel Resonance (LCR Circuits)", "Three Phase AC supply and Power in AC circuits",
+            "Mechanical properties of solids (Stress, Strain, Modulus)", "Electrical properties: Energy Band Theory",
+            "Superconductors and Hysteresis Loop", "Intrinsic and Extrinsic Semiconductors", "P-N Junctions and Rectification"
+        ]},
+        { name: "Electronics & Logic", topics: [
+            "Transistors: Structure and Operation", "Transistor as an Amplifier", "Operational Amplifiers (Op-Amp) basics",
+            "Op-Amp as Inverting and Non-inverting amplifier", "Op-Amp as a Comparator and Night Switch",
+            "Digital Electronics: Logic Gates (AND, OR, NOT)", "NAND and NOR Gates (Universal gates)", "XOR and XNOR Gates",
+            "Applications of Logic Gates in Control Systems", "Review: Solve all numerical problems from Unit 16 and 17"
+        ]},
+        { name: "Modern Physics & Atoms", topics: [
+            "Frame of Reference and Special Theory of Relativity", "Black Body Radiation and Planck's Theory",
+            "Photoelectric Effect and Einstein's Equation", "Compton Effect and Photon Momentum",
+            "De-Broglie’s Hypothesis and Wave-Particle Duality", "System Study: The Electron Microscope and how it visualizes biological cells",
+            "Uncertainty Principle and Wave Nature", "Bohr’s Atomic Model and Energy Levels",
+            "Inner Shell Transitions and X-Rays production", "Medical System: CT Scan (Computed Tomography) and Laser therapy"
+        ]},
+        { name: "Nuclear Physics & Radiation", topics: [
+            "Atomic Nucleus and Isotopes", "Mass Defect and Binding Energy", "Radioactivity: Alpha, Beta, and Gamma decay",
+            "Half-life and Radioactive Decay Law", "Nuclear Fission and Nuclear Reactors", "Nuclear Fusion and Stellar Energy",
+            "Radiation Detectors (GM Counter, Wilson Cloud Chamber)", "Medical Focus: Medical uses of tracers and radiation therapy",
+            "System Study: Biological Effects of Radiation on human tissue and DNA", "Final Review: Unit 20 summaries and practice of past paper numericals"
+        ]}
+    ];
+    for (let phase of physicsPhases) {
+        for (let topic of phase.topics) {
+            physicsTopics.push({ day: physicsTopics.length+1, phase: phase.name, title: topic });
+        }
+    }
+    while(physicsTopics.length < 60) physicsTopics.push({ day: physicsTopics.length+1, phase: "Review", title: "Revision & Problem Practice" });
+    if(physicsTopics.length > 60) physicsTopics.length = 60;
+
+    // --------------------------------------------------------------
+    // 3. CHEMISTRY DATA (60 days from provided schedule)
+    // --------------------------------------------------------------
+    const chemTopics = [];
+    const chemPhases = [
+        { name: "Inorganic Chemistry", daysRange: [1,18], topics: [
+            "Periodic Trends: Atomic/Ionic radii, Ionization Energy, and Electron Affinity",
+            "Group 1 (Alkali Metals): Physical properties and reactions with H₂O, O₂, and H₂",
+            "Group 2 (Alkaline Earth Metals): Solubility trends of Sulfates and Hydroxides",
+            "Group 13: Borax, Boric Acid, and the peculiar behavior of Boron",
+            "Group 14: Carbon and Silicon (Oxides and Silicates)",
+            "Group 15: Nitrogen and Phosphorus (Allotropes and Oxides)",
+            "Industrial System: Manufacture of Ammonia (Haber’s Process) and Nitric Acid",
+            "Group 16: Sulfur and the manufacture of Sulfuric Acid (Contact Process)",
+            "Group 17 & 18: Halogens (Oxidizing power) and Noble Gases (Xenon compounds)",
+            "Transition Elements: General characteristics and variable oxidation states",
+            "Color of transition complexes and Magnetic properties (Paramagnetism/Diamagnetism)",
+            "Coordination Compounds: Nomenclature and Werner’s Theory",
+            "Valence Bond Theory (VBT) and Geometry of complexes (Tetrahedral vs. Octahedral)",
+            "Isomerism in Coordination Compounds",
+            "Important compounds: Potassium Dichromate (K₂Cr₂O₇) and KMnO₄",
+            "Industrial System: Manufacture of Steel and corrosion mechanisms",
+            "The Lanthanide Series and its properties",
+            "Review of Inorganic Reactions and Periodic Table maps"
+        ]},
+        { name: "Organic Chemistry Fundamentals", daysRange: [19,30], topics: [
+            "Introduction to Organic Chemistry and Vital Force Theory",
+            "Classification and Functional Groups identification",
+            "IUPAC Nomenclature of Alkanes, Alkenes, and Alkynes",
+            "Structural and Geometrical (Cis-Trans) Isomerism",
+            "Alkanes: Preparation and Free Radical Substitution mechanism",
+            "Alkenes: Preparation and Electrophilic Addition (Markovnikov’s Rule)",
+            "Alkynes: Preparation and Acidic nature of Ethyne",
+            "Benzene: Structure, Resonance, and Stability (Huckel’s Rule)",
+            "Electrophilic Substitution: Nitration and Sulfonation of Benzene",
+            "Electrophilic Substitution: Halogenation and Friedel-Crafts reactions",
+            "Orientation in Benzene: Ortho, Para, and Meta directing groups",
+            "Comparison of Aliphatic vs. Aromatic Hydrocarbons"
+        ]},
+        { name: "Functional Groups", daysRange: [31,42], topics: [
+            "Alkyl Halides: Classification and preparation methods",
+            "Mechanism: Nucleophilic Substitution (S_N1 vs. S_N2)",
+            "Mechanism: Elimination Reactions (E1 vs. E2)",
+            "Alcohols: Classification, preparation, and the Lucas Test",
+            "Phenols: Acidity and reactions with Zn and HNO₃",
+            "Ethers: Preparation (Williamson’s Synthesis) and reactivity",
+            "Aldehydes and Ketones: Preparation and Nucleophilic Addition",
+            "Oxidation of Carbonyls (Tollens’, Fehling’s, and Benedict’s Tests)",
+            "Carboxylic Acids: Physical properties and Acidity trends",
+            "System Study: The mechanism of Esterification",
+            "Derivatives of Carboxylic Acids: Acid Halides, Amides, and Acid Anhydrides",
+            "Amines: Classification and Basic Strength"
+        ]},
+        { name: "Biochemistry & Life Chemistry", daysRange: [43,50], topics: [
+            "Carbohydrates: Structure of Glucose and Fructose",
+            "Polysaccharides: Starch, Cellulose, and Glycogen",
+            "Proteins: Amino acids, Zwitterions, and Peptide bonds",
+            "Protein Levels: Primary, Secondary, Tertiary, and Quaternary structures",
+            "Enzyme Focus: Mechanism of Enzyme Action (Lock and Key model)",
+            "Lipids: Classification, Fats, Oils, and Saponification (Soap making)",
+            "Nucleic Acids: Structure of DNA and RNA",
+            "Health Focus: Vitamins (A, D, E, K, C, B-complex) and related disorders"
+        ]},
+        { name: "Industrial & Environmental Chemistry", daysRange: [51,60], topics: [
+            "Fertilizer Industry: Manufacture of Urea",
+            "Cement Industry: Raw materials and the Setting of Cement",
+            "Glass and Ceramics manufacturing",
+            "System Study: Petroleum Refining and Fractional Distillation",
+            "Polymers: Addition (PVC, Polyethylene) and Condensation (Nylon, Terylene)",
+            "Environmental Chemistry: Air Pollution (CO, SOₓ, NOₓ)",
+            "Disorder Focus: The Greenhouse Effect and Ozone Depletion",
+            "Water Pollution: Dissolved Oxygen (DO) and Chemical Oxygen Demand (COD)",
+            "Water Treatment: Primary, Secondary, and Tertiary purification stages",
+            "Final Review: Name Reactions, Formula Sheets, and Past Paper practice"
+        ]}
+    ];
+    for (let phase of chemPhases) {
+        for (let topic of phase.topics) {
+            chemTopics.push({ day: chemTopics.length+1, phase: phase.name, title: topic });
+        }
+    }
+    while(chemTopics.length < 60) chemTopics.push({ day: chemTopics.length+1, phase: "Review", title: "Revision & Past Papers" });
+    if(chemTopics.length > 60) chemTopics.length = 60;
+
+    // --------------------------------------------------------------
+    // 4. Storage & state management
+    // --------------------------------------------------------------
+    let entries = {};      // key: day, value: { bioPlan, bioObs, phyPlan, phyObs, chemPlan, chemObs }
+    let currentDay = 1;
+
+    const STORAGE_KEY = "triple_60_entries";
+    const STORAGE_DAY = "triple_current_day";
+
+    function loadStorage() {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) entries = JSON.parse(stored);
+        else entries = {};
+        const storedDay = localStorage.getItem(STORAGE_DAY);
+        if (storedDay && !isNaN(parseInt(storedDay))) currentDay = Math.min(60, Math.max(1, parseInt(storedDay)));
+        else currentDay = 1;
+        document.getElementById("jumpToDay").value = currentDay;
+        document.getElementById("currentDayDisplay").innerText = currentDay;
+    }
+
+    function persistEntries() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+        updateStats();
+    }
+
+    function updateStats() {
+        let bioLogged = 0, phyLogged = 0, chemLogged = 0;
+        for (let i = 1; i <= 60; i++) {
+            const e = entries[i];
+            if (e) {
+                if (e.bioObs?.trim() || e.bioPlan?.trim()) bioLogged++;
+                if (e.phyObs?.trim() || e.phyPlan?.trim()) phyLogged++;
+                if (e.chemObs?.trim() || e.chemPlan?.trim()) chemLogged++;
+            }
+        }
+        document.getElementById("bioCompletedCount").innerText = bioLogged;
+        document.getElementById("phyCompletedCount").innerText = phyLogged;
+        document.getElementById("chemCompletedCount").innerText = chemLogged;
+    }
+
+    function saveCurrentEntries() {
+        if (!entries[currentDay]) entries[currentDay] = {};
+        entries[currentDay].bioPlan = document.getElementById("bioPlanInput").value;
+        entries[currentDay].bioObs = document.getElementById("bioObsInput").value;
+        entries[currentDay].phyPlan = document.getElementById("phyPlanInput").value;
+        entries[currentDay].phyObs = document.getElementById("phyObsInput").value;
+        entries[currentDay].chemPlan = document.getElementById("chemPlanInput").value;
+        entries[currentDay].chemObs = document.getElementById("chemObsInput").value;
+        persistEntries();
+        const btn = document.getElementById("saveEntryBtn");
+        const original = btn.innerText;
+        btn.innerText = "✅ Saved!";
+        setTimeout(() => { btn.innerText = original; }, 1500);
+    }
+
+    function loadDayData(day) {
+        currentDay = day;
+        localStorage.setItem(STORAGE_DAY, currentDay);
+        document.getElementById("jumpToDay").value = currentDay;
+        document.getElementById("currentDayDisplay").innerText = currentDay;
+
+        const bio = bioTopics[day-1] || { phase: "Review", title: "Flexible Revision" };
+        const physics = physicsTopics[day-1] || { phase: "Review", title: "Numericals & Concepts" };
+        const chem = chemTopics[day-1] || { phase: "Review", title: "Reaction Recap" };
+
+        const topicsGrid = document.getElementById("topicsGrid");
+        topicsGrid.innerHTML = `
+            <div class="topic-card bio">
+                <h3>🧬 Biology</h3>
+                <div class="topic-title"><strong>${bio.title}</strong></div>
+                <div class="topic-meta">📘 Phase: ${bio.phase}</div>
+                <div class="topic-meta">🎯 Deep study: Cell? Enzymes? Disorders?</div>
+            </div>
+            <div class="topic-card physics">
+                <h3>⚛️ Physics</h3>
+                <div class="topic-title"><strong>${physics.title}</strong></div>
+                <div class="topic-meta">⚡ Phase: ${physics.phase}</div>
+                <div class="topic-meta">📐 Formula, instrument, biological impact</div>
+            </div>
+            <div class="topic-card chemistry">
+                <h3>🧪 Chemistry</h3>
+                <div class="topic-title"><strong>${chem.title}</strong></div>
+                <div class="topic-meta">🧪 Phase: ${chem.phase}</div>
+                <div class="topic-meta">⚙️ Mechanism, industrial process, biochemical link</div>
+            </div>
+        `;
+
+        const entry = entries[day] || {};
+        document.getElementById("bioPlanInput").value = entry.bioPlan || "";
+        document.getElementById("bioObsInput").value = entry.bioObs || "";
+        document.getElementById("phyPlanInput").value = entry.phyPlan || "";
+        document.getElementById("phyObsInput").value = entry.phyObs || "";
+        document.getElementById("chemPlanInput").value = entry.chemPlan || "";
+        document.getElementById("chemObsInput").value = entry.chemObs || "";
+        updateStats();
+    }
+
+    function setCurrentDay(day) {
+        if (day < 1) day = 1;
+        if (day > 60) day = 60;
+        loadDayData(day);
+    }
+
+    function resetAllProgress() {
+        if (confirm("⚠️ WARNING: This will permanently delete ALL your daily entries for Biology, Physics, and Chemistry. This action cannot be undone. Continue?")) {
+            entries = {};
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({}));
+            setCurrentDay(1);
+            updateStats();
+            loadDayData(1);
+        }
+    }
+
+    // --------------------------------------------------------------
+    // 5. Event listeners
+    // --------------------------------------------------------------
+    document.getElementById("prevDayBtn").addEventListener("click", () => setCurrentDay(currentDay - 1));
+    document.getElementById("nextDayBtn").addEventListener("click", () => setCurrentDay(currentDay + 1));
+    document.getElementById("saveEntryBtn").addEventListener("click", saveCurrentEntries);
+    document.getElementById("goToDayBtn").addEventListener("click", () => {
+        let val = parseInt(document.getElementById("jumpToDay").value);
+        if (isNaN(val)) val = currentDay;
+        setCurrentDay(Math.min(60, Math.max(1, val)));
+    });
+    document.getElementById("resetAllBtn").addEventListener("click", resetAllProgress);
+    document.getElementById("jumpToDay").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            let val = parseInt(e.target.value);
+            if (!isNaN(val)) setCurrentDay(Math.min(60, Math.max(1, val)));
+        }
+    });
+
+    loadStorage();
+    loadDayData(currentDay);
+    updateStats();
+</script>
+</body>
+</html>
